@@ -1,39 +1,39 @@
 CDR_TYPES = {
     '00000000': {
         'method': 'parse_standard',
-        'report': 'standard_report'
+        'report': 'standard'
     },
     '00000001': {
         'method': 'parse_intermediate',
-        'report': ''
+        'report': None
     },
     '00000004': {
         'method': 'parse_queue',
-        'report': 'queue_report'
+        'report': 'queue'
     },
     '00000005': {
         'method': 'parse_call_forwarding',
-        'report': ''
+        'report': None
     },
     '10000001': {
         'method': 'parse_long_call',
-        'report': ''
+        'report': None
     },
     '10000010': {
         'method': 'parse_change_of_software',
-        'report': ''
+        'report': None
     },
     '10000100': {
         'method': 'parse_feature',
-        'report': ''
+        'report': None
     },
     '10000101': {
         'method': 'parse_half_call',
-        'report': ''
+        'report': None
     },
     '10000111': {
         'method': 'parse_qos',
-        'report': ''
+        'report': None
     }
 }
 
@@ -54,6 +54,6 @@ RESULTS = {
 }
 
 ABANDON = {
-    1: 'NO',
-    2: 'SI'
+    1: 0,
+    2: 1
 }

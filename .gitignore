@@ -140,4 +140,5 @@ cython_debug/
 # Custom
 .env
 dump
-.csv
+*.csv
+*.sql
