@@ -30,3 +30,11 @@ python download_latests_cdr.py osv2-20200417
 ## Elasticsearch y Kibana
 
 Se incluyen un par de tareas para levantar `elasticsearch` y `kibana` en contenedores.
+
+## Kibana scripted fields
+
+```painless
+if (doc.containsKey('end_time') || !doc['end_time'].empty) {
+    return doc['end_time'].value.millis - doc['start_time'].value.millis
+}
+```
