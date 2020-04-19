@@ -57,3 +57,85 @@ ABANDON = {
     1: 0,
     2: 1
 }
+
+ELASTICSEARCH_STANDARD_MAPPINGS = {
+  "@timestamp": {
+    "type": "date"
+  },
+  "call_duration": {
+    "type": "long"
+  },
+  "detination": {
+    "type": "keyword"
+  },
+  "hang_time": {
+    "type": "keyword"
+  },
+  "id": {
+    "type": "keyword"
+  },
+  "incoming_leg_hang_time": {
+    "type": "keyword"
+  },
+  "incoming_leg_pickup_time": {
+    "type": "keyword"
+  },
+  "origin": {
+    "type": "keyword"
+  },
+  "osv_destination": {
+    "type": "keyword"
+  },
+  "osv_origin": {
+    "type": "keyword"
+  },
+  "outgoing_leg_hang_time": {
+    "type": "keyword"
+  },
+  "outgoing_leg_pickup_time": {
+    "type": "keyword"
+  },
+  "pickup_time": {
+    "type": "keyword"
+  },
+  "result": {
+    "type": "keyword"
+  },
+  "start_time": {
+    "type": "date",
+    "format": "yyyy-MM-dd HH:mm:ss"
+  },
+  "switch_id": {
+    "type": "keyword"
+  }
+}
+
+ELASTICSEARCH_QUEUE_MAPPINGS = {
+  "@timestamp": {
+    "type": "date"
+  },
+  "abandon": {
+    "type": "keyword"
+  },
+  "destination": {
+    "type": "keyword"
+  },
+  "end_time": {
+    "type": "date",
+    "format": "yyyy-MM-dd HH:mm:ss"
+  },
+  "id": {
+    "type": "keyword"
+  },
+  "queue_id": {
+    "type": "keyword"
+  },
+  "start_time": {
+    "type": "date",
+    "format": "yyyy-MM-dd HH:mm:ss"
+  },
+  "time": {
+    "type": "date",
+    "format": "yyyy-MM-dd HH:mm:ss"
+  }
+}
