@@ -139,3 +139,31 @@ ELASTICSEARCH_QUEUE_MAPPINGS = {
     "format": "yyyy-MM-dd HH:mm:ss"
   }
 }
+
+STANDARD_FIELDS = [
+    'switch_id',
+    'id',
+    'start_time',
+    'call_duration',
+    'origin',
+    'detination',
+    'result',
+    'osv_origin',
+    'osv_destination',
+    'pickup_time',
+    'hang_time',
+    'incoming_leg_pickup_time',
+    'incoming_leg_hang_time',
+    'outgoing_leg_pickup_time',
+    'outgoing_leg_hang_time'
+]
+
+QUEUE_FIELDS = [
+    'id',
+    'time',
+    'queue_id',
+    'start_time',
+    'end_time',
+    'abandon',
+    'destination'
+]
