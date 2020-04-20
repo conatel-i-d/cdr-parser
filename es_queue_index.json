@@ -33,6 +33,9 @@
         "type": "date",
         "format": "yyyy-MM-dd HH:mm:ss",
         "ignore_malformed": true
+      },
+      "total_time": {
+        "type": "long"
       }
     }
   }

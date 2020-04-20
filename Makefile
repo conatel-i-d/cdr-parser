@@ -31,6 +31,7 @@ es_load_queue:
 	elasticsearch_loader \
 		--bulk-size 500 \
 		--es-host http://localhost:9200 \
+		--index-settings-file ./es_queue_index.json \
 		--index queue \
 		--delete \
 		--progress \

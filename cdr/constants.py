@@ -150,9 +150,9 @@ STANDARD_FIELDS = [
     'switch_id',
     'id',
     'time',
-    'call_duration',
+    'duration',
     'origin',
-    'detination',
+    'destination',
     'result',
     'osv_origin',
     'osv_destination',
@@ -161,7 +161,12 @@ STANDARD_FIELDS = [
     'incoming_leg_pickup_time',
     'incoming_leg_hang_time',
     'outgoing_leg_pickup_time',
-    'outgoing_leg_hang_time'
+    'outgoing_leg_hang_time',
+    'wait_time',
+    'abandon_time',
+    'duration_minutes',
+    'is_agent_call',
+    'is_abandoned_call'
 ]
 
 QUEUE_FIELDS = [
@@ -171,5 +176,6 @@ QUEUE_FIELDS = [
     'start_time',
     'end_time',
     'abandon',
-    'destination'
+    'destination',
+    'total_time'
 ]

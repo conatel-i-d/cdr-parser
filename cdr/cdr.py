@@ -1,6 +1,7 @@
 import os
 import queue
 import threading
+import traceback
 
 import boto3
 from progressbar import progressbar, ProgressBar
@@ -18,6 +19,7 @@ class cdr(CDRParser):
         bucket_name=None,
         folder_prefix=None,
         cdr_folder=None,
+        downloaded_cdr_file=None,
         num_worker_threads=10,
         debug=False
     ):
@@ -25,6 +27,7 @@ class cdr(CDRParser):
         self.s3 = s3 or boto3.resource('s3')
         self.bucket_name = bucket_name or os.environ.get('BUCKET_NAME')
         self.folder_prefix = folder_prefix or os.environ.get('FOLDER_PREFIX')
+        self.downloaded_cdr_file = downloaded_cdr_file or os.environ.get('DOWNLOADED_CDR_FILE')
         self.num_worker_threads = num_worker_threads
         self.s3_client = self.s3.meta.client
         self.bucket = self.s3.Bucket(self.bucket_name)
@@ -33,13 +36,11 @@ class cdr(CDRParser):
 
     @property
     def marker(self):
-        marker = os.environ.get('CDR_MARKER', None)
-        if marker is None or marker == '':
-            try:
-                marker = sorted(os.listdir(self.cdr_folder), reverse=True)[0]
-            except Exception:
-                marker = ''
-        return self.folder_prefix + marker
+        try:
+            with open(self.downloaded_cdr_file, 'r') as db:
+                return db.readline()
+        except:
+            return None
 
     def get_last_modified(self, obj):
         return obj.last_modified
@@ -54,28 +55,49 @@ class cdr(CDRParser):
                 self.q.task_done()
         return worker
 
-    def download_cdr(self, item):
-        (index, key) = item
+    def download_cdr(self, key):
         filepath = f"{self.cdr_folder}/{key.replace(self.folder_prefix, '')}"
         self.s3_client.download_file(self.bucket_name, key, filepath)
         try:
-            self._bar.update(index)
+            self.update_progress_bar()
         except:
             print('Can\'t update the progressbar')
+
+    def update_progress_bar(self):
+        index = self._bar_index
+        self._bar.update(index)
+        self._bar_index += 1
     
     def download_latests_cdr(self, object_prefix=''):
         prefix = self.folder_prefix + object_prefix
         print(f"Looking for new CDRs starting from: {self.marker}. With prefix: {prefix}")
-        cdr_objects = self.bucket.objects.filter(
-            Prefix=prefix, MaxKeys=1000, Marker=self.marker)
+        cdr_objects = self.bucket.objects.filter(Prefix=prefix, MaxKeys=1000, Marker=self.marker)
         sorted_cdr_objects = sorted(cdr_objects, key=self.get_last_modified, reverse=True)
         if len(sorted_cdr_objects) is 0:
             print("No new CDRs to download")
             return
         print('Gathered all cdr objects. Proceeding to download...')
+        # Store the current downloaded cdr file
+        with open(self.downloaded_cdr_file, 'r') as contents:
+            save = contents.read()
+        # Try to download the new cdrs
+        try:
+            self.start_download_queue(sorted_cdr_objects)
+        # If it fails, remove the modified downloaded cdr file
+        except:
+            print('Something went wrong')
+            traceback.print_exc()
+            if os.path.exists(self.downloaded_cdr_file):
+                os.remove(self.downloaded_cdr_file)
+        # Append the stored downloaded cdr file
+        with open(self.downloaded_cdr_file, 'a') as contents:
+            contents.write(save)
+
+    def start_download_queue(self, cdr_objects):
         # Wrap everything into a ProgressBar Context
-        with ProgressBar(max_value=len(sorted_cdr_objects)) as bar:
+        with ProgressBar(max_value=len(cdr_objects)) as bar:
             # Store progressbar into class variable
+            self._bar_index = 0
             self._bar = bar
             # Create a new queue
             self.q = queue.Queue()
@@ -88,9 +110,12 @@ class cdr(CDRParser):
                 thread = threading.Thread(target=target)
                 thread.start()
                 threads.append(thread)
-            # Put keys into queue
-            for index, cdr_object in enumerate(sorted_cdr_objects):
-                self.q.put((index, cdr_object.key,))
+            # Put keys into queue and store it into the downloaded cdr file
+            with open(self.downloaded_cdr_file, 'w') as contents:
+                for cdr_object in cdr_objects:
+                    cdr_object_key = cdr_object.key 
+                    contents.write(cdr_object_key + '\n')
+                    self.q.put(cdr_object_key)
             # Block until all tasks are done
             self.q.join()
             # Stop workers

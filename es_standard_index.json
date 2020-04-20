@@ -65,6 +65,21 @@
       },
       "switch_id": {
         "type": "keyword"
+      },
+      "wait_time": {
+        "type": "long"
+      },
+      "abandon_time": {
+        "type": "long"
+      },
+      "duration_minutes": {
+        "type": "long"
+      },
+      "is_agent_call": {
+        "type": "keyword"
+      },
+      "is_abandoned_call": {
+        "type": "keyword"
       }
     }
   }
