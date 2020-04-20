@@ -25,6 +25,9 @@ es_load_standard:
 		--index-settings-file ./es_standard_index.json \
 		--delete \
 		--progress \
+		-v ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml \
+		-v /var/esdatadir:/usr/share/elasticsearch/data \
+		-e "ES_JAVA_OPTS=-Xms2g -Xmx2g" \
 		csv ./standard.csv
 
 es_load_queue:
@@ -35,5 +38,6 @@ es_load_queue:
 		--index queue \
 		--delete \
 		--progress \
+		-v ./kibana.yml:/usr/share/kibana/config/kibana.yml \
 		csv ./queue.csv
 

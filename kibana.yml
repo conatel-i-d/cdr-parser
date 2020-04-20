@@ -1,0 +1,1 @@
+xpack.security.authc.providers: [token, basic]
