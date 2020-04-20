@@ -6,7 +6,6 @@ elasticsearch:
 		-p 9300:9300 \
 		--restart unless-stopped \
 		-e "discovery.type=single-node" \
-		-v elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml \
 		-v /var/esdatadir:/usr/share/elasticsearch/data \
 		-e "ES_JAVA_OPTS=-Xms2g -Xmx2g" \
 		elasticsearch:7.6.2
