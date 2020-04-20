@@ -23,7 +23,7 @@ class CDRParser(object):
     def parse_pass(self, row):
         pass
 
-    def to_seconds_date_diff(self, start, end):
+    def to_minutes_date_diff(self, start, end):
         if start is '' or end is '':
             return ''
         return round((end - start).total_seconds() / 60, 2)
@@ -57,9 +57,9 @@ class CDRParser(object):
             self.to_date(row[50]),
             self.to_date(row[51]),
             self.to_date(row[52]),
-            self.to_seconds_date_diff(time, pickup_time),
-            self.to_seconds_date_diff(time, hang_time),
-            round(duration / 10 / 60, 2),
+            self.to_minutes_date_diff(time, pickup_time), # wait_time
+            self.to_minutes_date_diff(time, hang_time),   # session_time
+            round(duration / 10 / 60, 2),                 # duration_minutes
             self.check_if_is_agent_call(origin, destination),
             self.check_if_is_abandoned_call(origin, destination, duration)
         ]
@@ -76,7 +76,7 @@ class CDRParser(object):
             end_time,
             str(ABANDON.get(int(row[10]), '0')),
             row[11],
-            self.to_seconds_date_diff(start_time, end_time)
+            self.to_minutes_date_diff(start_time, end_time)
         ]
 
     def process_files(self, row_processor, **kwargs):

@@ -163,7 +163,7 @@ STANDARD_FIELDS = [
     'outgoing_leg_pickup_time',
     'outgoing_leg_hang_time',
     'wait_time',
-    'abandon_time',
+    'session_time',
     'duration_minutes',
     'is_agent_call',
     'is_abandoned_call'
