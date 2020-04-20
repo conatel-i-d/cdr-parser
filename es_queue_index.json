@@ -1,0 +1,39 @@
+{
+  "settings": {
+    "number_of_shards": 1
+  },
+  "mappings": {
+    "properties": {
+      "@timestamp": {
+        "type": "date"
+      },
+      "abandon": {
+        "type": "keyword"
+      },
+      "destination": {
+        "type": "keyword"
+      },
+      "end_time": {
+        "type": "date",
+        "format": "yyyy-MM-dd HH:mm:ss",
+        "ignore_malformed": true
+      },
+      "id": {
+        "type": "keyword"
+      },
+      "queue_id": {
+        "type": "keyword"
+      },
+      "start_time": {
+        "type": "date",
+        "format": "yyyy-MM-dd HH:mm:ss",
+        "ignore_malformed": true
+      },
+      "time": {
+        "type": "date",
+        "format": "yyyy-MM-dd HH:mm:ss",
+        "ignore_malformed": true
+      }
+    }
+  }
+}

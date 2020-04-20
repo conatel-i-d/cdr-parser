@@ -10,6 +10,7 @@ from cdr.cdr_parser import CDRParser
 from cdr.csv_cdr_parser import CSVCDRParser
 from cdr.sqlite_cdr_parser import SqliteCDRParser
 from cdr.elasticsearch_cdr_parser import ElasticsearchCDRParser
+from cdr.csv_splitter import split
 
 class cdr(CDRParser):
     def __init__(self, 
@@ -98,6 +99,23 @@ class cdr(CDRParser):
             # Close threads
             for thread in threads:
                 thread.join() 
+            
+    def split_csv_report(self, report, row_limit=125000):
+        report_basepath = report.replace('.csv', '')
+        print(f'Spliting report: {report_basepath}')
+        with open(report, 'r') as r:
+            csvfile = r.readlines()
+            headers = csvfile[0]
+            split_index = 1
+            for i in range(len(csvfile)):
+                if i % row_limit == 0:
+                    filepath = report_basepath + '_' + str(split_index) + '.csv'
+                    print(filepath)
+                    with open(filepath, 'w+') as f:
+                        if split_index > 1:
+                            f.write(headers)
+                        f.writelines(csvfile[i:i+row_limit])
+                        split_index += 1
 
     def process_cdr(self, target='csv'):
         print('Processing CDR files:')

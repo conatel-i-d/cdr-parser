@@ -1,4 +1,4 @@
-.PHONY: elasticsearch
+.PHONY: elasticsearch kibana es_load es_load_standard es_load_queue
 
 elasticsearch:
 	docker run -d --name elasticsearch \
@@ -14,3 +14,25 @@ kibana:
 		--link elasticsearch:elasticsearch \
 		-p 5601:5601 \
 		docker.elastic.co/kibana/kibana:7.6.2
+
+es_load: es_load_standard es_load_queue
+
+es_load_standard:
+	elasticsearch_loader \
+		--bulk-size 500 \
+		--es-host http://localhost:9200 \
+		--index standard \
+		--index-settings-file ./es_standard_index.json \
+		--delete \
+		--progress \
+		csv ./standard.csv
+
+es_load_queue:
+	elasticsearch_loader \
+		--bulk-size 500 \
+		--es-host http://localhost:9200 \
+		--index queue \
+		--delete \
+		--progress \
+		csv ./queue.csv
+

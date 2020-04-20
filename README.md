@@ -38,3 +38,30 @@ if (doc.containsKey('end_time') || !doc['end_time'].empty) {
     return doc['end_time'].value.millis - doc['start_time'].value.millis
 }
 ```
+
+```json
+2914: unable to parse date [time]
+{"id":"id","time":"time","queue_id":"queue_id","start_time":"start_time","end_time":"end_time","abandon":"abandon","destination":"destination"}
+18842: failed to parse field [start_time] of type [date] in document with id 'VQhklXEBpbPnjzp2IfDt'. Preview of field's value: 'None'
+{"id":"00000000000000000000000000000000","time":"2020-04-03 20:24:31","start_time":"None","end_time":"2020-04-04 05:41:55","abandon":"0","destination":"59820303700"}
+18843: failed to parse field [start_time] of type [date] in document with id 'VghklXEBpbPnjzp2IfDt'. Preview of field's value: 'None'
+{"id":"00000000000000000000000000000000","time":"2020-04-03 20:24:40","start_time":"None","end_time":"2020-04-04 05:44:19","abandon":"0","destination":"59820303700"}
+24995: failed to parse field [start_time] of type [date] in document with id 'XglklXEBpbPnjzp2Jgi5'. Preview of field's value: 'None'
+{"id":"00000000000000000000000000000000","time":"2020-04-03 20:29:43","start_time":"None","end_time":"2020-04-03 20:31:43","abandon":"1"}
+24996: failed to parse field [start_time] of type [date] in document with id 'XwlklXEBpbPnjzp2Jgi5'. Preview of field's value: 'None'
+{"id":"00000000000000000000000000000000","time":"2020-04-03 20:29:43","start_time":"None","end_time":"2020-04-03 20:31:43","abandon":"1"}
+25002: failed to parse field [start_time] of type [date] in document with id 'ZQlklXEBpbPnjzp2Kgi7'. Preview of field's value: 'None'
+{"id":"00000000000000000000000000000000","time":"2020-04-03 20:29:31","start_time":"None","end_time":"2020-04-03 20:31:52","abandon":"1"}
+26045: unable to parse date [time]
+{"id":"id","time":"time","queue_id":"queue_id","start_time":"start_time","end_time":"end_time","abandon":"abandon","destination":"destination"}
+41973: failed to parse field [start_time] of type [date] in document with id 'rwlklXEBpbPnjzp2N0rr'. Preview of field's value: 'None'
+{"id":"00000000000000000000000000000000","time":"2020-04-03 20:24:31","start_time":"None","end_time":"2020-04-04 05:41:55","abandon":"0","destination":"59820303700"}
+41974: failed to parse field [start_time] of type [date] in document with id 'sAlklXEBpbPnjzp2N0rr'. Preview of field's value: 'None'
+{"id":"00000000000000000000000000000000","time":"2020-04-03 20:24:40","start_time":"None","end_time":"2020-04-04 05:44:19","abandon":"0","destination":"59820303700"}
+48126: failed to parse field [start_time] of type [date] in document with id 'uAlklXEBpbPnjzp2PGIo'. Preview of field's value: 'None'
+{"id":"00000000000000000000000000000000","time":"2020-04-03 20:29:43","start_time":"None","end_time":"2020-04-03 20:31:43","abandon":"1"}
+48127: failed to parse field [start_time] of type [date] in document with id 'uQlklXEBpbPnjzp2PGIo'. Preview of field's value: 'None'
+{"id":"00000000000000000000000000000000","time":"2020-04-03 20:29:43","start_time":"None","end_time":"2020-04-03 20:31:43","abandon":"1"}
+48133: failed to parse field [start_time] of type [date] in document with id 'vwlklXEBpbPnjzp2PGIp'. Preview of field's value: 'None'
+{"id":"00000000000000000000000000000000","time":"2020-04-03 20:29:31","start_time":"None","end_time":"2020-04-03 20:31:52","abandon":"1"}
+```

@@ -1,0 +1,71 @@
+{
+  "settings": {
+    "number_of_shards": 1
+  },
+  "mappings": {
+    "properties": {
+      "@timestamp": {
+        "type": "date"
+      },
+      "call_duration": {
+        "type": "long"
+      },
+      "detination": {
+        "type": "keyword"
+      },
+      "hang_time": {
+        "type": "date",
+        "format": "yyyy-MM-dd HH:mm:ss",
+        "ignore_malformed": true
+      },
+      "id": {
+        "type": "keyword"
+      },
+      "incoming_leg_hang_time": {
+        "type": "date",
+        "format": "yyyy-MM-dd HH:mm:ss",
+        "ignore_malformed": true
+      },
+      "incoming_leg_pickup_time": {
+        "type": "date",
+        "format": "yyyy-MM-dd HH:mm:ss",
+        "ignore_malformed": true
+      },
+      "origin": {
+        "type": "keyword"
+      },
+      "osv_destination": {
+        "type": "keyword"
+      },
+      "osv_origin": {
+        "type": "keyword"
+      },
+      "outgoing_leg_hang_time": {
+        "type": "date",
+        "format": "yyyy-MM-dd HH:mm:ss",
+        "ignore_malformed": true
+      },
+      "outgoing_leg_pickup_time": {
+        "type": "date",
+        "format": "yyyy-MM-dd HH:mm:ss",
+        "ignore_malformed": true
+      },
+      "pickup_time": {
+        "type": "date",
+        "format": "yyyy-MM-dd HH:mm:ss",
+        "ignore_malformed": true
+      },
+      "result": {
+        "type": "keyword"
+      },
+      "time": {
+        "type": "date",
+        "format": "yyyy-MM-dd HH:mm:ss",
+        "ignore_malformed": true
+      },
+      "switch_id": {
+        "type": "keyword"
+      }
+    }
+  }
+}

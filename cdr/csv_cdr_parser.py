@@ -27,7 +27,7 @@ class CSVCDRParser(CDRParser):
         csv_file.write('\n')
 
     def parse(self, **kwargs):
-        if kwargs.get('clean', False) is True:
+        if kwargs.get('clean', True) is True:
             self.delete_csv_files()
         with open(self.standard_csv_path, 'a') as sr, open(self.queue_csv_path, 'a') as qr:
             sr.write(",".join(STANDARD_FIELDS))

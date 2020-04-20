@@ -17,7 +17,7 @@ class CDRParser(object):
 
     def to_date(self, value):
         if value is None or value == '':
-            return None
+            return ''
         return datetime.strptime(value.split('.')[0], '%Y-%d-%mT%H:%M:%S')
 
     def parse_pass(self, row):

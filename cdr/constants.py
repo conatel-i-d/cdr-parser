@@ -69,16 +69,19 @@ ELASTICSEARCH_STANDARD_MAPPINGS = {
     "type": "keyword"
   },
   "hang_time": {
-    "type": "keyword"
+    "type": "date",
+    "format": "yyyy-MM-dd HH:mm:ss"
   },
   "id": {
     "type": "keyword"
   },
   "incoming_leg_hang_time": {
-    "type": "keyword"
+    "type": "date",
+    "format": "yyyy-MM-dd HH:mm:ss"
   },
   "incoming_leg_pickup_time": {
-    "type": "keyword"
+    "type": "date",
+    "format": "yyyy-MM-dd HH:mm:ss"
   },
   "origin": {
     "type": "keyword"
@@ -90,18 +93,21 @@ ELASTICSEARCH_STANDARD_MAPPINGS = {
     "type": "keyword"
   },
   "outgoing_leg_hang_time": {
-    "type": "keyword"
+    "type": "date",
+    "format": "yyyy-MM-dd HH:mm:ss"
   },
   "outgoing_leg_pickup_time": {
-    "type": "keyword"
+    "type": "date",
+    "format": "yyyy-MM-dd HH:mm:ss"
   },
   "pickup_time": {
-    "type": "keyword"
+    "type": "date",
+    "format": "yyyy-MM-dd HH:mm:ss"
   },
   "result": {
     "type": "keyword"
   },
-  "start_time": {
+  "time": {
     "type": "date",
     "format": "yyyy-MM-dd HH:mm:ss"
   },
@@ -143,7 +149,7 @@ ELASTICSEARCH_QUEUE_MAPPINGS = {
 STANDARD_FIELDS = [
     'switch_id',
     'id',
-    'start_time',
+    'time',
     'call_duration',
     'origin',
     'detination',
