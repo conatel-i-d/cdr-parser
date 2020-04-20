@@ -6,8 +6,6 @@ elasticsearch:
 		-p 9300:9300 \
 		--restart unless-stopped \
 		-e "discovery.type=single-node" \
-		-v /var/esdatadir:/usr/share/elasticsearch/data \
-		-e "ES_JAVA_OPTS=-Xms2g -Xmx2g" \
 		elasticsearch:7.6.2
 
 kibana:
@@ -15,7 +13,6 @@ kibana:
 		--restart unless-stopped \
 		--link elasticsearch:elasticsearch \
 		-p 5601:5601 \
-		-v ./kibana.yml:/usr/share/kibana/config/kibana.yml \
 		docker.elastic.co/kibana/kibana:7.6.2
 
 es_load: es_load_standard es_load_queue
