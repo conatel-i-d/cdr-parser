@@ -19,7 +19,6 @@ services:
     cap_add:
       - IPC_LOCK
     volumes:
-      - ./elasticsearch.yml:/usr/share/elasticsearch/config/elasticsearch.yml
       - elasticsearch-data:/usr/share/elasticsearch/data
     ports:
       - 9200:9200
@@ -33,8 +32,6 @@ services:
       - ELASTICSEARCH_HOSTS=http://elasticsearch:9200
     ports:
       - 5601:5601
-    volumes:
-      - ./kibana.yml:/usr/share/kibana/config/kibana.yml
     depends_on:
       - elasticsearch
 
