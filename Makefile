@@ -12,6 +12,7 @@ kibana:
 	docker run -d --name kibana \
 		--restart unless-stopped \
 		--link elasticsearch:elasticsearch \
+		-v '`pwd`/kibana.yml:/usr/share/kibana/config/kibana.yml'
 		-p 5601:5601 \
 		docker.elastic.co/kibana/kibana:7.6.2
 
