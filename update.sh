@@ -16,7 +16,6 @@ elasticsearch_loader \
 		--es-host http://localhost:9200 \
 		--index standard \
 		--index-settings-file ./es_standard_index.json \
-		--delete \
 		--progress \
 		csv ./standard.csv
 echo
@@ -26,7 +25,6 @@ elasticsearch_loader \
 		--es-host http://localhost:9200 \
 		--index-settings-file ./es_queue_index.json \
 		--index queue \
-		--delete \
 		--progress \
 		csv ./queue.csv
 echo
