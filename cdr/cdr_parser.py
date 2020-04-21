@@ -48,7 +48,7 @@ class CDRParser(object):
             duration,
             origin,
             destination,
-            RESULTS.get(row[17], 'NPI'),
+            RESULTS.get(int(row[17]), 'NPI'),
             row[39],
             row[40],
             pickup_time,
