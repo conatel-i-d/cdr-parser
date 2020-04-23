@@ -69,6 +69,7 @@ class cdr(CDRParser):
         self._bar_index += 1
     
     def download_latests_cdr(self, object_prefix=''):
+        ### Ismael, modificar a partir de aca
         prefix = self.folder_prefix + object_prefix
         print(f"Looking for new CDRs starting from: {self.marker}. With prefix: {prefix}")
         cdr_objects = self.bucket.objects.filter(Prefix=prefix, MaxKeys=1000, Marker=self.marker)
@@ -77,6 +78,7 @@ class cdr(CDRParser):
             print("No new CDRs to download")
             return
         print('Gathered all cdr objects. Proceeding to download...')
+        ### Ismael, no se debería modificar nada a partir de aca.
         # Store the current downloaded cdr file
         with open(self.downloaded_cdr_file, 'r') as contents:
             save = contents.read()
