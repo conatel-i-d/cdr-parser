@@ -17,6 +17,7 @@ elasticsearch_loader \
 		--index standard \
 		--index-settings-file ./es_standard_index.json \
 		--progress \
+		--delete \
 		csv ./standard.csv
 echo
 echo "[Moving new queue data into elasticsearch]"
@@ -26,6 +27,7 @@ elasticsearch_loader \
 		--index-settings-file ./es_queue_index.json \
 		--index queue \
 		--progress \
+		--delete \
 		csv ./queue.csv
 echo
 echo "[Deleting CDR_FOLDER]"
