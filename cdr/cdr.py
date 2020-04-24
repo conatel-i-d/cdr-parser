@@ -5,6 +5,7 @@ import traceback
 
 import boto3
 from progressbar import progressbar, ProgressBar
+from datetime import datetime
 
 from cdr.constants import CDR_TYPES, RESULTS, ABANDON, STANDARD_FIELDS, QUEUE_FIELDS
 from cdr.cdr_parser import CDRParser
@@ -20,6 +21,7 @@ class cdr(CDRParser):
         folder_prefix=None,
         cdr_folder=None,
         downloaded_cdr_file=None,
+        cdr_db=None,
         num_worker_threads=10,
         debug=False
     ):
@@ -28,6 +30,7 @@ class cdr(CDRParser):
         self.bucket_name = bucket_name or os.environ.get('BUCKET_NAME')
         self.folder_prefix = folder_prefix or os.environ.get('FOLDER_PREFIX')
         self.downloaded_cdr_file = downloaded_cdr_file or os.environ.get('DOWNLOADED_CDR_FILE')
+        self.cdr_db = cdr_db or os.environ.get('CDR_DB')
         self.num_worker_threads = num_worker_threads
         self.s3_client = self.s3.meta.client
         self.bucket = self.s3.Bucket(self.bucket_name)
@@ -42,8 +45,30 @@ class cdr(CDRParser):
         except:
             return None
 
+    @property
+    def last_downloaded_cdr_key(self):
+        try:
+            with open(self.cdr_db, 'r') as db:
+                return db.readline().rstrip('\n')
+        except:
+            return None
+
     def get_last_modified(self, obj):
         return obj.last_modified
+
+    def get_datetime_from_key(self, key):
+        filename = key[-29:]
+        cdr_year = int(filename[:4])
+        cdr_month = int(filename[4:6])
+        cdr_day = int(filename[6:8])
+        cdr_hour = int(filename[9:11])
+        cdr_minute = int(filename[11:13])
+        cdr_seconds = int(filename[13:15])
+        return datetime(cdr_year, cdr_month, cdr_day, cdr_hour, cdr_minute, cdr_seconds)
+
+    def sort_by_date(self, obj):
+        current_datetime = self.get_datetime_from_key(obj.key)
+        return current_datetime.timestamp()
 
     def create_worker(self, task):
         def worker():
@@ -67,7 +92,42 @@ class cdr(CDRParser):
         index = self._bar_index
         self._bar.update(index)
         self._bar_index += 1
-    
+
+    def my_download_latests_cdr(self):
+        ### Ismael, modificar a partir de aca
+        datetime_of_last_downloaded_cdr = self.get_datetime_from_key(self.last_downloaded_cdr_key)
+        print('This is the datetime of the last downloaded CDR:', datetime_of_last_downloaded_cdr)
+        prefix = self.folder_prefix
+        print(f"Looking for new CDRs starting from: {self.last_downloaded_cdr_key}. With prefix: {prefix}")
+        print('The marker is:', self.marker)
+        cdr_objects = self.bucket.objects.filter(Prefix=prefix, MaxKeys=1000, Marker=self.last_downloaded_cdr_key)
+        objects_to_download = list(filter(lambda x: self.get_datetime_from_key(x.key) > datetime_of_last_downloaded_cdr, cdr_objects))
+        sorted_objects_to_download = sorted(objects_to_download, key=self.sort_by_date, reverse=True)
+        if len(sorted_objects_to_download) > 0:
+            print('Cantidad de cdrs a descargar:', len(sorted_objects_to_download))
+        else:
+            print('No hay nuevos CDRs para descaragr')
+            return
+        print('Gathered all cdr objects. Proceeding to download...')
+        ### Ismael, no se debería modificar nada a partir de aca.
+        # Store the current downloaded cdr file
+        with open(self.downloaded_cdr_file, 'r') as contents:
+            save = contents.read()
+        # Try to download the new cdrs
+        try:
+            self.start_download_queue(sorted_objects_to_download)
+            with open(self.cdr_db, 'w') as cdr_db:
+                cdr_db.writelines([sorted_objects_to_download[0].key])
+        # If it fails, remove the modified downloaded cdr file
+        except:
+            print('Something went wrong')
+            traceback.print_exc()
+            if os.path.exists(self.downloaded_cdr_file):
+                os.remove(self.downloaded_cdr_file)
+        # Append the stored downloaded cdr file
+        with open(self.downloaded_cdr_file, 'a') as contents:
+            contents.write(save)
+
     def download_latests_cdr(self, object_prefix=''):
         ### Ismael, modificar a partir de aca
         prefix = self.folder_prefix + object_prefix
