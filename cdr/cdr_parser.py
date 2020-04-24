@@ -41,6 +41,10 @@ class CDRParser(object):
         duration = int(row[3])
         origin = row[11]
         destination = row[10]
+        try:
+            result = RESULTS.get(int(row[17]), 'NPI')
+        except:
+            result = 'NPI'
         return [
             row[4],
             row[5][-32:],
@@ -48,7 +52,7 @@ class CDRParser(object):
             duration,
             origin,
             destination,
-            RESULTS.get(int(row[17]), 'NPI'),
+            result,
             row[39],
             row[40],
             pickup_time,

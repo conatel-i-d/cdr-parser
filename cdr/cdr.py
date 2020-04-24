@@ -22,7 +22,7 @@ class cdr(CDRParser):
         cdr_folder=None,
         downloaded_cdr_file=None,
         cdr_db=None,
-        num_worker_threads=10,
+        num_worker_threads=20,
         debug=False
     ):
         super().__init__(cdr_folder=cdr_folder)
@@ -36,14 +36,6 @@ class cdr(CDRParser):
         self.bucket = self.s3.Bucket(self.bucket_name)
         if debug is True:
             boto3.set_stream_logger(name='botocore')
-
-    @property
-    def marker(self):
-        try:
-            with open(self.downloaded_cdr_file, 'r') as db:
-                return db.readline()
-        except:
-            return None
 
     @property
     def last_downloaded_cdr_key(self):
@@ -93,14 +85,11 @@ class cdr(CDRParser):
         self._bar.update(index)
         self._bar_index += 1
 
-    def my_download_latests_cdr(self):
-        ### Ismael, modificar a partir de aca
+    def download_latests_cdr(self):
         datetime_of_last_downloaded_cdr = self.get_datetime_from_key(self.last_downloaded_cdr_key)
         print('This is the datetime of the last downloaded CDR:', datetime_of_last_downloaded_cdr)
-        prefix = self.folder_prefix
-        print(f"Looking for new CDRs starting from: {self.last_downloaded_cdr_key}. With prefix: {prefix}")
-        print('The marker is:', self.marker)
-        cdr_objects = self.bucket.objects.filter(Prefix=prefix, MaxKeys=1000, Marker=self.last_downloaded_cdr_key)
+        print(f"Looking for new CDRs starting from: {self.last_downloaded_cdr_key}. With folder prefix: {self.folder_prefix}")
+        cdr_objects = self.bucket.objects.filter(Prefix=self.folder_prefix, MaxKeys=1000, Marker=self.last_downloaded_cdr_key)
         objects_to_download = list(filter(lambda x: self.get_datetime_from_key(x.key) > datetime_of_last_downloaded_cdr, cdr_objects))
         sorted_objects_to_download = sorted(objects_to_download, key=self.sort_by_date, reverse=True)
         if len(sorted_objects_to_download) > 0:
@@ -109,51 +98,14 @@ class cdr(CDRParser):
             print('No hay nuevos CDRs para descaragr')
             return
         print('Gathered all cdr objects. Proceeding to download...')
-        ### Ismael, no se debería modificar nada a partir de aca.
-        # Store the current downloaded cdr file
-        with open(self.downloaded_cdr_file, 'r') as contents:
-            save = contents.read()
         # Try to download the new cdrs
         try:
             self.start_download_queue(sorted_objects_to_download)
             with open(self.cdr_db, 'w') as cdr_db:
                 cdr_db.writelines([sorted_objects_to_download[0].key])
-        # If it fails, remove the modified downloaded cdr file
         except:
             print('Something went wrong')
             traceback.print_exc()
-            if os.path.exists(self.downloaded_cdr_file):
-                os.remove(self.downloaded_cdr_file)
-        # Append the stored downloaded cdr file
-        with open(self.downloaded_cdr_file, 'a') as contents:
-            contents.write(save)
-
-    def download_latests_cdr(self, object_prefix=''):
-        ### Ismael, modificar a partir de aca
-        prefix = self.folder_prefix + object_prefix
-        print(f"Looking for new CDRs starting from: {self.marker}. With prefix: {prefix}")
-        cdr_objects = self.bucket.objects.filter(Prefix=prefix, MaxKeys=1000, Marker=self.marker)
-        sorted_cdr_objects = sorted(cdr_objects, key=self.get_last_modified, reverse=True)
-        if len(sorted_cdr_objects) is 0:
-            print("No new CDRs to download")
-            return
-        print('Gathered all cdr objects. Proceeding to download...')
-        ### Ismael, no se debería modificar nada a partir de aca.
-        # Store the current downloaded cdr file
-        with open(self.downloaded_cdr_file, 'r') as contents:
-            save = contents.read()
-        # Try to download the new cdrs
-        try:
-            self.start_download_queue(sorted_cdr_objects)
-        # If it fails, remove the modified downloaded cdr file
-        except:
-            print('Something went wrong')
-            traceback.print_exc()
-            if os.path.exists(self.downloaded_cdr_file):
-                os.remove(self.downloaded_cdr_file)
-        # Append the stored downloaded cdr file
-        with open(self.downloaded_cdr_file, 'a') as contents:
-            contents.write(save)
 
     def start_download_queue(self, cdr_objects):
         # Wrap everything into a ProgressBar Context
@@ -173,11 +125,9 @@ class cdr(CDRParser):
                 thread.start()
                 threads.append(thread)
             # Put keys into queue and store it into the downloaded cdr file
-            with open(self.downloaded_cdr_file, 'w') as contents:
-                for cdr_object in cdr_objects:
-                    cdr_object_key = cdr_object.key 
-                    contents.write(cdr_object_key + '\n')
-                    self.q.put(cdr_object_key)
+            for cdr_object in cdr_objects:
+                cdr_object_key = cdr_object.key 
+                self.q.put(cdr_object_key)
             # Block until all tasks are done
             self.q.join()
             # Stop workers
