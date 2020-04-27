@@ -34,7 +34,7 @@ echo "[Moving new standard call summary data into elasticsearch]"
 elasticsearch_loader \
 		--bulk-size 500 \
 		--es-host http://localhost:9200 \
-		--index std-call-summary \
+		--index std-calls-summary \
 		--progress \
 		csv ./standard_calls_summary.csv
 echo
