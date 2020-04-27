@@ -13,6 +13,8 @@ echo
 echo "[Process CDR to CSV]"
 python3 process_cdr_csv.py
 echo
+echo "[Process CDR to calls summary CSV]"
+python3 process_cdr_calls_summary.py
 echo "[Moving new standard data into elasticsearch]"
 elasticsearch_loader \
 		--bulk-size 500 \
