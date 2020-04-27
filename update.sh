@@ -40,5 +40,6 @@ elasticsearch_loader \
 echo
 echo "[Deleting CDR_FOLDER]"
 rm -Rf $CDR_FOLDER
+rm *.csv || true
 echo
 echo "[DONE]"
