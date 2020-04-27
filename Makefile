@@ -1,4 +1,19 @@
-.PHONY: elasticsearch kibana es_load es_load_standard es_load_queue
+#!make
+include .env
+export $(shell sed 's/=.*//' .env)
+
+.PHONY: run clean download-latest process-cdr-csv elasticsearch kibana es_load es_load_standard es_load_queue
+
+run: clean download-latest process-cdr-csv es-load-standard es-load-queue
+
+clean:
+	rm -Rf $$CDR_FOLDER && `rm *.csv || true` && mkdir -p $$CDR_FOLDER
+
+download-latest:
+	python3 download_latest_cdr.py
+
+process-cdr-csv:
+	python3 process_cdr_csv.py
 
 elasticsearch:
 	docker run -d --name elasticsearch \
@@ -16,9 +31,9 @@ kibana:
 		-p 5601:5601 \
 		docker.elastic.co/kibana/kibana:7.6.2
 
-es_load: es_load_standard es_load_queue
+es-load: es_load_standard es_load_queue
 
-es_load_standard:
+es-load-standard:
 	elasticsearch_loader \
 		--bulk-size 500 \
 		--es-host http://localhost:9200 \
@@ -28,7 +43,7 @@ es_load_standard:
 		--progress \
 		csv ./standard.csv
 
-es_load_queue:
+es-load-queue:
 	elasticsearch_loader \
 		--bulk-size 500 \
 		--es-host http://localhost:9200 \

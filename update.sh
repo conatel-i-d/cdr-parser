@@ -1,4 +1,7 @@
 #!/bin/bash
+
+echo "[[ Running update cdr task for: $(date) ]]"
+echo
 echo "[Loading environment variables]"
 export $(cat .env | sed 's/#.*//g' | xargs)
 echo

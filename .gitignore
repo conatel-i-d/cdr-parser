@@ -143,3 +143,5 @@ dump
 *.csv
 *.sql
 *.txt
+*.db
+@
