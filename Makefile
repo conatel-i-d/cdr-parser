@@ -53,3 +53,13 @@ es-load-queue:
 		--progress \
 		csv ./queue.csv
 
+es-load-standard-calls-summary:
+	elasticsearch_loader \
+		--bulk-size 500 \
+		--es-host http://localhost:9200 \
+		--index-settings-file ./es_standard_calls_summary.json \
+		--index std-call-summary \
+		--delete \
+		--progress \
+		csv ./standard_calls_summary.csv
+

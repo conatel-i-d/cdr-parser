@@ -28,6 +28,13 @@ elasticsearch_loader \
 		--index queue \
 		--progress \
 		csv ./queue.csv
+echo "[Moving new standard call summary data into elasticsearch]"
+elasticsearch_loader \
+		--bulk-size 500 \
+		--es-host http://localhost:9200 \
+		--index std-call-summary \
+		--progress \
+		csv ./standard_calls_summary.csv
 echo
 echo "[Deleting CDR_FOLDER]"
 rm -Rf $CDR_FOLDER

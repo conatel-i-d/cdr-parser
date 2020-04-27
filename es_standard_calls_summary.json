@@ -1,0 +1,20 @@
+{
+  "mappings": {
+    "properties": {
+      "@timestamp": {
+        "type": "date"
+      },
+      "calls_lost": {
+        "type": "long"
+      },
+      "calls_attended": {
+        "type": "long"
+      },
+      "start_time": {
+        "type": "date",
+        "format": "yyyy-MM-dd HH:mm:ss",
+        "ignore_malformed": true
+      }
+    }
+  }
+}
