@@ -25,7 +25,7 @@ class CDRPanda(CDRPandaBase):
             (self.df['terminating_number'] == queue_number) &
             (self.df['originating_number'] != pre_attendant_number) &
             (self.df['originating_number'].str.contains(originating_number_regex, regex=True) == False)
-        ].copy().groupby([pd.Grouper(key='start_time', freq=freq), 'originating_number'])['duration_of_call'].sum()
+        ].copy().groupby([pd.Grouper(key='start_time', freq=freq, base=3), 'originating_number'])['duration_of_call'].sum()
         print('Creating the calls_lost Series...')
         calls_lost = queue_df[queue_df == 0].copy().groupby(level='start_time').count()
         calls_lost.rename('calls_lost')
